@@ -54,6 +54,7 @@ import static org.springframework.http.HttpHeaders.IF_NONE_MATCH;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
 import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 import com.adobe.testing.s3mock.dto.AccessControlPolicy;
@@ -522,7 +523,7 @@ public class ObjectController {
       value = "/{bucketName:.+}/{*key}",
       method = RequestMethod.PUT
   )
-  public ResponseEntity<Void> putObject(@PathVariable String bucketName,
+  public ResponseEntity<String> putObject(@PathVariable String bucketName,
       @PathVariable ObjectKey key,
       @RequestHeader(value = X_AMZ_SERVER_SIDE_ENCRYPTION, required = false) String encryption,
       @RequestHeader(
@@ -555,11 +556,17 @@ public class ObjectController {
             owner);
 
     return ResponseEntity
-        .ok()
+        .status(503)
         .eTag(s3ObjectMetadata.getEtag())
         .lastModified(s3ObjectMetadata.getLastModified())
         .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, kmsKeyId)
-        .build();
+        .body("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<Error>\n"
+            + "  <Code>SlowDown</Code>\n"
+            + "  <Message>Please reduce your request rate.</Message>\n"
+            + "  <Resource>"+key.getKey()+"</Resource> \n"
+            + "  <RequestId>1234567890Example</RequestId>\n"
+            + "</Error>");
   }
 
   /**
