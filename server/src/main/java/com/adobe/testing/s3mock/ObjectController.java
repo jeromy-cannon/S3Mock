@@ -564,7 +564,7 @@ public class ObjectController {
             + "<Error>\n"
             + "  <Code>SlowDown</Code>\n"
             + "  <Message>Please reduce your request rate.</Message>\n"
-            + "  <Resource>"+key.getKey()+"</Resource> \n"
+            + "  <Resource>" + key.getKey() + "</Resource> \n"
             + "  <RequestId>1234567890Example</RequestId>\n"
             + "</Error>");
   }
