@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 import com.adobe.testing.s3mock.dto.ListBucketResult;
 import com.adobe.testing.s3mock.dto.ListBucketResultV2;
 import com.adobe.testing.s3mock.dto.S3Object;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketMetadata;
 import com.adobe.testing.s3mock.store.MultipartStore;
 import java.util.Arrays;
@@ -47,7 +48,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ServiceConfiguration.class})
-@MockBean({ObjectService.class, MultipartService.class, MultipartStore.class})
+@MockBean({ObjectService.class, MultipartService.class, MultipartStore.class,
+    AlteredBehaviorStore.class, BehaviorService.class})
 class BucketServiceTest extends ServiceTestBase {
   private static final String TEST_BUCKET_NAME = "test-bucket";
 

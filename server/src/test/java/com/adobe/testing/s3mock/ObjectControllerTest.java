@@ -26,6 +26,7 @@ import static com.adobe.testing.s3mock.util.AwsHttpParameters.RETENTION;
 import static com.adobe.testing.s3mock.util.AwsHttpParameters.TAGGING;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -45,13 +46,16 @@ import com.adobe.testing.s3mock.dto.Bucket;
 import com.adobe.testing.s3mock.dto.Grant;
 import com.adobe.testing.s3mock.dto.Grantee;
 import com.adobe.testing.s3mock.dto.Mode;
+import com.adobe.testing.s3mock.dto.ObjectKey;
 import com.adobe.testing.s3mock.dto.Owner;
 import com.adobe.testing.s3mock.dto.Retention;
 import com.adobe.testing.s3mock.dto.Tag;
 import com.adobe.testing.s3mock.dto.Tagging;
+import com.adobe.testing.s3mock.service.BehaviorService;
 import com.adobe.testing.s3mock.service.BucketService;
 import com.adobe.testing.s3mock.service.MultipartService;
 import com.adobe.testing.s3mock.service.ObjectService;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketStore;
 import com.adobe.testing.s3mock.store.KmsKeyStore;
 import com.adobe.testing.s3mock.store.S3ObjectMetadata;
@@ -75,13 +79,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
 @MockBeans({@MockBean(classes = {KmsKeyStore.class, BucketStore.class, MultipartService.class,
-  BucketController.class, MultipartController.class})})
+  BucketController.class, MultipartController.class, AlteredBehaviorStore.class,
+  BehaviorService.class})})
 @SpringBootTest(classes = {S3MockConfiguration.class})
 class ObjectControllerTest {
   private static final String TEST_BUCKET_NAME = "test-bucket";
@@ -94,6 +100,8 @@ class ObjectControllerTest {
   private ObjectService objectService;
   @MockBean
   private BucketService bucketService;
+  @MockBean
+  private BehaviorService behaviorService;
 
   @Autowired
   private MockMvc mockMvc;
@@ -119,6 +127,17 @@ class ObjectControllerTest {
         isNull(),
         eq(Owner.DEFAULT_OWNER))
     ).thenReturn(s3ObjectMetadata(key, digest));
+
+    when(behaviorService.getPutObjectResponse(
+        any(S3ObjectMetadata.class), isNull(), any(ObjectKey.class)
+    )).thenReturn(
+        ResponseEntity
+            .ok()
+            .eTag(digest)
+            .lastModified(0)
+            .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, key)
+            .body("")
+    );
 
     mockMvc.perform(
             put("/test-bucket/" + key)
@@ -151,6 +170,17 @@ class ObjectControllerTest {
         isNull(),
         eq(Owner.DEFAULT_OWNER))
     ).thenReturn(s3ObjectMetadata(key, digest));
+
+    when(behaviorService.getPutObjectResponse(
+        any(S3ObjectMetadata.class), isNull(), any(ObjectKey.class)
+    )).thenReturn(
+        ResponseEntity
+            .ok()
+            .eTag(digest)
+            .lastModified(0)
+            .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, key)
+            .body("")
+    );
 
     String origin = "http://www.someurl.com";
     String method = "PUT";
@@ -197,6 +227,17 @@ class ObjectControllerTest {
         isNull(),
         eq(Owner.DEFAULT_OWNER))
     ).thenReturn(s3ObjectMetadata(key, hexDigest));
+
+    when(behaviorService.getPutObjectResponse(
+        any(S3ObjectMetadata.class), isNull(), any(ObjectKey.class)
+    )).thenReturn(
+        ResponseEntity
+            .ok()
+            .eTag(hexDigest)
+            .lastModified(0)
+            .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, key)
+            .body("")
+    );
 
     mockMvc.perform(
             put("/test-bucket/" + key)

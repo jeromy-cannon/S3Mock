@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import com.adobe.testing.s3mock.dto.CompletedPart;
 import com.adobe.testing.s3mock.dto.Part;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketMetadata;
 import com.adobe.testing.s3mock.store.MultipartStore;
 import com.adobe.testing.s3mock.store.ObjectStore;
@@ -40,7 +41,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ServiceConfiguration.class})
-@MockBean({BucketService.class, ObjectService.class, ObjectStore.class})
+@MockBean({BucketService.class, ObjectService.class, ObjectStore.class, AlteredBehaviorStore.class,
+    BehaviorService.class})
 class MultipartServiceTest extends ServiceTestBase {
 
   @MockBean
