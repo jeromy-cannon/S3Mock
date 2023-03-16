@@ -50,7 +50,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
 @MockBean(classes = {KmsKeyStore.class, ObjectStore.class, BucketStore.class, ObjectService.class,
-    MultipartService.class, MultipartStore.class, AlteredBehaviorStore.class, BehaviorService.class})
+    MultipartService.class, MultipartStore.class, AlteredBehaviorStore.class,
+    BehaviorService.class})
 @SpringBootTest(classes = {S3MockConfiguration.class},
     properties = {"com.adobe.testing.s3mock.contextPath=s3-mock"})
 class ContextPathObjectStoreControllerTest {
