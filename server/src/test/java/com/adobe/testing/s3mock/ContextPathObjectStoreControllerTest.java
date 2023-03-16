@@ -25,6 +25,7 @@ import com.adobe.testing.s3mock.dto.Owner;
 import com.adobe.testing.s3mock.service.BucketService;
 import com.adobe.testing.s3mock.service.MultipartService;
 import com.adobe.testing.s3mock.service.ObjectService;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketStore;
 import com.adobe.testing.s3mock.store.KmsKeyStore;
 import com.adobe.testing.s3mock.store.MultipartStore;
@@ -48,7 +49,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureWebMvc
 @AutoConfigureMockMvc
 @MockBean(classes = {KmsKeyStore.class, ObjectStore.class, BucketStore.class, ObjectService.class,
-    MultipartService.class, MultipartStore.class})
+    MultipartService.class, MultipartStore.class, AlteredBehaviorStore.class, BucketService.class})
 @SpringBootTest(classes = {S3MockConfiguration.class},
     properties = {"com.adobe.testing.s3mock.contextPath=s3-mock"})
 class ContextPathObjectStoreControllerTest {

@@ -16,6 +16,7 @@
 
 package com.adobe.testing.s3mock.service;
 
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketStore;
 import com.adobe.testing.s3mock.store.MultipartStore;
 import com.adobe.testing.s3mock.store.ObjectStore;
@@ -38,5 +39,10 @@ public class ServiceConfiguration {
   @Bean
   MultipartService multipartService(BucketStore bucketStore, MultipartStore multipartStore) {
     return new MultipartService(bucketStore, multipartStore);
+  }
+
+  @Bean
+  BehaviorService behaviorService(AlteredBehaviorStore alteredBehaviorStore) {
+    return new BehaviorService(alteredBehaviorStore);
   }
 }

@@ -69,6 +69,7 @@ import com.adobe.testing.s3mock.dto.Range;
 import com.adobe.testing.s3mock.dto.Retention;
 import com.adobe.testing.s3mock.dto.Tag;
 import com.adobe.testing.s3mock.dto.Tagging;
+import com.adobe.testing.s3mock.service.BehaviorService;
 import com.adobe.testing.s3mock.service.BucketService;
 import com.adobe.testing.s3mock.service.ObjectService;
 import com.adobe.testing.s3mock.store.S3ObjectMetadata;
@@ -107,10 +108,13 @@ public class ObjectController {
 
   private final BucketService bucketService;
   private final ObjectService objectService;
+  private final BehaviorService behaviorService;
 
-  public ObjectController(BucketService bucketService, ObjectService objectService) {
+  public ObjectController(final BucketService bucketService, final ObjectService objectService,
+      final BehaviorService behaviorService) {
     this.bucketService = bucketService;
     this.objectService = objectService;
+    this.behaviorService = behaviorService;
   }
 
   //================================================================================================
@@ -555,18 +559,7 @@ public class ObjectController {
             tags,
             owner);
 
-    return ResponseEntity
-        .status(503)
-        .eTag(s3ObjectMetadata.getEtag())
-        .lastModified(s3ObjectMetadata.getLastModified())
-        .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, kmsKeyId)
-        .body("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<Error>\n"
-            + "  <Code>SlowDown</Code>\n"
-            + "  <Message>Please reduce your request rate.</Message>\n"
-            + "  <Resource>" + key.getKey() + "</Resource> \n"
-            + "  <RequestId>1234567890Example</RequestId>\n"
-            + "</Error>");
+    return behaviorService.getPutObjectResponse(s3ObjectMetadata, kmsKeyId, key);
   }
 
   /**

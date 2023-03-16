@@ -26,6 +26,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StoreProperties {
 
   /**
+   * True if PutObject should generate a SlowDown response error code.
+   * False (default) for normal PutObject behavior.
+   */
+  private boolean forceSlowDownResponse;
+
+  /**
    * True if files should be retained when S3Mock exits gracefully.
    * False to let S3Mock delete all files when S3Mock exits gracefully.
    */
@@ -73,5 +79,13 @@ public class StoreProperties {
 
   public void setValidKmsKeys(Set<String> validKmsKeys) {
     this.validKmsKeys = validKmsKeys;
+  }
+
+  public boolean isForceSlowDownResponse() {
+    return forceSlowDownResponse;
+  }
+
+  public void setForceSlowDownResponse(boolean forceSlowDownResponse) {
+    this.forceSlowDownResponse = forceSlowDownResponse;
   }
 }

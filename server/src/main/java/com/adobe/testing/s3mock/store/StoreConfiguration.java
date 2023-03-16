@@ -135,4 +135,9 @@ public class StoreConfiguration {
 
     return root;
   }
+
+  @Bean
+  AlteredBehaviorStore alteredBehaviorStore(StoreProperties properties) {
+    return new AlteredBehaviorStore(properties.isForceSlowDownResponse());
+  }
 }
