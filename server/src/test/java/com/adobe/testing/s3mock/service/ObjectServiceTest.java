@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2022 Adobe.
+ *  Copyright 2017-2023 Adobe.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import com.adobe.testing.s3mock.dto.DeleteResult;
 import com.adobe.testing.s3mock.dto.Mode;
 import com.adobe.testing.s3mock.dto.Retention;
 import com.adobe.testing.s3mock.dto.S3ObjectIdentifier;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketMetadata;
 import com.adobe.testing.s3mock.store.MultipartStore;
 import com.adobe.testing.s3mock.store.S3ObjectMetadata;
@@ -53,7 +54,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ServiceConfiguration.class})
-@MockBean({BucketService.class, MultipartService.class, MultipartStore.class})
+@MockBean({BucketService.class, MultipartService.class, MultipartStore.class,
+    AlteredBehaviorStore.class, BehaviorService.class})
 class ObjectServiceTest extends ServiceTestBase {
   private static final String TEST_FILE_PATH = "src/test/resources/sampleFile.txt";
   @Autowired

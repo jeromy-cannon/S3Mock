@@ -68,6 +68,7 @@ import com.adobe.testing.s3mock.dto.Range;
 import com.adobe.testing.s3mock.dto.Retention;
 import com.adobe.testing.s3mock.dto.Tag;
 import com.adobe.testing.s3mock.dto.Tagging;
+import com.adobe.testing.s3mock.service.BehaviorService;
 import com.adobe.testing.s3mock.service.BucketService;
 import com.adobe.testing.s3mock.service.ObjectService;
 import com.adobe.testing.s3mock.store.S3ObjectMetadata;
@@ -106,10 +107,13 @@ public class ObjectController {
 
   private final BucketService bucketService;
   private final ObjectService objectService;
+  private final BehaviorService behaviorService;
 
-  public ObjectController(BucketService bucketService, ObjectService objectService) {
+  public ObjectController(final BucketService bucketService, final ObjectService objectService,
+      final BehaviorService behaviorService) {
     this.bucketService = bucketService;
     this.objectService = objectService;
+    this.behaviorService = behaviorService;
   }
 
   //================================================================================================
@@ -522,7 +526,7 @@ public class ObjectController {
       value = "/{bucketName:.+}/{*key}",
       method = RequestMethod.PUT
   )
-  public ResponseEntity<Void> putObject(@PathVariable String bucketName,
+  public ResponseEntity<String> putObject(@PathVariable String bucketName,
       @PathVariable ObjectKey key,
       @RequestHeader(value = X_AMZ_SERVER_SIDE_ENCRYPTION, required = false) String encryption,
       @RequestHeader(
@@ -554,12 +558,7 @@ public class ObjectController {
             tags,
             owner);
 
-    return ResponseEntity
-        .ok()
-        .eTag(s3ObjectMetadata.getEtag())
-        .lastModified(s3ObjectMetadata.getLastModified())
-        .header(X_AMZ_SERVER_SIDE_ENCRYPTION_AWS_KMS_KEY_ID, kmsKeyId)
-        .build();
+    return behaviorService.getPutObjectResponse(s3ObjectMetadata, kmsKeyId, key);
   }
 
   /**

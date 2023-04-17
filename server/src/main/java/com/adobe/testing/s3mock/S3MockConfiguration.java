@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2022 Adobe.
+ *  Copyright 2017-2023 Adobe.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.adobe.testing.s3mock;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import com.adobe.testing.s3mock.dto.ErrorResponse;
+import com.adobe.testing.s3mock.service.BehaviorService;
 import com.adobe.testing.s3mock.service.BucketService;
 import com.adobe.testing.s3mock.service.MultipartService;
 import com.adobe.testing.s3mock.service.ObjectService;
@@ -140,8 +141,9 @@ public class S3MockConfiguration implements WebMvcConfigurer {
   }
 
   @Bean
-  ObjectController fileStoreController(ObjectService objectService, BucketService bucketService) {
-    return new ObjectController(bucketService, objectService);
+  ObjectController fileStoreController(final ObjectService objectService,
+      final BucketService bucketService, final BehaviorService behaviorService) {
+    return new ObjectController(bucketService, objectService, behaviorService);
   }
 
   @Bean

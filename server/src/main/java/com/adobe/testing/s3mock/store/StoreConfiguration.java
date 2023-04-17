@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2022 Adobe.
+ *  Copyright 2017-2023 Adobe.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -134,5 +134,10 @@ public class StoreConfiguration {
     }
 
     return root;
+  }
+
+  @Bean
+  AlteredBehaviorStore alteredBehaviorStore(StoreProperties properties) {
+    return new AlteredBehaviorStore(properties.isForceSlowDownResponse());
   }
 }

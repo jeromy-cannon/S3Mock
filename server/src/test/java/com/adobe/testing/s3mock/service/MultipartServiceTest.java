@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2022 Adobe.
+ *  Copyright 2017-2023 Adobe.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import com.adobe.testing.s3mock.dto.CompletedPart;
 import com.adobe.testing.s3mock.dto.Part;
+import com.adobe.testing.s3mock.store.AlteredBehaviorStore;
 import com.adobe.testing.s3mock.store.BucketMetadata;
 import com.adobe.testing.s3mock.store.MultipartStore;
 import com.adobe.testing.s3mock.store.ObjectStore;
@@ -40,7 +41,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ServiceConfiguration.class})
-@MockBean({BucketService.class, ObjectService.class, ObjectStore.class})
+@MockBean({BucketService.class, ObjectService.class, ObjectStore.class, AlteredBehaviorStore.class,
+    BehaviorService.class})
 class MultipartServiceTest extends ServiceTestBase {
 
   @MockBean

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017-2022 Adobe.
+ *  Copyright 2017-2023 Adobe.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("com.adobe.testing.s3mock.domain") //TODO: wrong package.
 public class StoreProperties {
+
+  /**
+   * True if PutObject should generate a SlowDown response error code.
+   * False (default) for normal PutObject behavior.
+   */
+  private boolean forceSlowDownResponse;
 
   /**
    * True if files should be retained when S3Mock exits gracefully.
@@ -73,5 +79,13 @@ public class StoreProperties {
 
   public void setValidKmsKeys(Set<String> validKmsKeys) {
     this.validKmsKeys = validKmsKeys;
+  }
+
+  public boolean isForceSlowDownResponse() {
+    return forceSlowDownResponse;
+  }
+
+  public void setForceSlowDownResponse(boolean forceSlowDownResponse) {
+    this.forceSlowDownResponse = forceSlowDownResponse;
   }
 }
